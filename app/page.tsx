@@ -1,4 +1,4 @@
-import MainWrapper from "@/components/shared/MainWrapper";
+import MainWrapper from "@/app/MainWrapper";
 
 export default function Home() {
   return <MainWrapper />;
