@@ -1,12 +1,13 @@
 "use client";
-
 import { useState } from "react";
 import { PiggyBank, Landmark, Calculator } from "lucide-react";
 import { ResultProvider } from "@/features/interest/contexts/ResultContext";
-import { SavingPlan } from "@/features/interest/components/SavingPlan";
-import { FixedPlan } from "@/features/interest/components/FixedPlan";
-import { ResultBox } from "@/features/interest/components/ResultBox";
-import { SubmitButton } from "@/features/interest/components/SubmitButton";
+import {
+  SavingPlan,
+  FixedPlan,
+  ResultBox,
+  SubmitButton,
+} from "@/features/interest/components";
 
 export function InterestWrapper() {
   const [activeTab, setActiveTab] = useState<"saving" | "fixed">("saving");

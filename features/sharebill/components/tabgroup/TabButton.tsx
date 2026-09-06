@@ -1,9 +1,6 @@
 "use client";
-
-import React from "react";
-import { Users, ReceiptText, PieChart } from "lucide-react";
-
-export type TabKey = "people" | "order" | "summary";
+import { TabKey } from "../../types";
+import { TAB_MENU } from "../../constants";
 
 type TabButtonProps = {
   value: TabKey;
@@ -11,24 +8,8 @@ type TabButtonProps = {
   onClick: (value: TabKey) => void;
 };
 
-// ปรับแก้ข้อความภาษาไทยให้ครอบคลุมทุกค่าใช้จ่าย
-const tabConfig: Record<TabKey, { label: string; icon: React.ElementType }> = {
-  people: {
-    label: "รายชื่อผู้เข้าร่วม",
-    icon: Users,
-  },
-  order: {
-    label: "รายการค่าใช้จ่าย",
-    icon: ReceiptText,
-  },
-  summary: {
-    label: "สรุปยอด",
-    icon: PieChart,
-  },
-};
-
 export function TabButton({ value, activeTab, onClick }: TabButtonProps) {
-  const { label, icon: Icon } = tabConfig[value];
+  const { label, icon: Icon } = TAB_MENU[value];
   const isActive = activeTab === value;
 
   return (

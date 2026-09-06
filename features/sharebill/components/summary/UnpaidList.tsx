@@ -1,6 +1,5 @@
 "use client";
 import { UserAvatar } from "@/components";
-import React from "react";
 
 export interface UnpaidPerson {
   id: string;

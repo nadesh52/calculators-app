@@ -1,11 +1,13 @@
 "use client";
-
 import React from "react";
 import { CalendarDays, ChevronDown } from "lucide-react";
 
-export interface MonthSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface MonthSelectProps {
   label?: string;
   selectedValue: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  className?: string;
+  value?: any;
+  defaultValue?: any;
 }
 
 export function MonthSelect({
@@ -14,7 +16,6 @@ export function MonthSelect({
   className = "",
   value,
   defaultValue,
-  ...props
 }: MonthSelectProps) {
   const monthOptions = [3, 6, 12, 24, 36];
 
@@ -44,7 +45,6 @@ export function MonthSelect({
           className={`w-full cursor-pointer appearance-none rounded-xl border border-zinc-200/80 bg-zinc-50/50 py-2 pr-8 pl-9 text-xs font-medium transition-all outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 ${
             isPlaceholder ? "text-zinc-400" : "text-zinc-800"
           } ${className}`}
-          {...props}
         >
           <option value="" disabled className="bg-white text-zinc-400">
             เลือกระยะเวลาฝาก

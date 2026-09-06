@@ -1,7 +1,6 @@
 "use client";
-
-import React from "react";
-import { TabButton, TabKey } from "./TabButton";
+import { TabKey } from "../../types";
+import { TabButton } from "./TabButton";
 
 type TabGroupProps = {
   tabs: TabKey[];

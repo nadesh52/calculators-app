@@ -1,4 +1,3 @@
-import React from "react";
 import { Users, CheckCircle2, AlertCircle } from "lucide-react";
 
 type Props = {

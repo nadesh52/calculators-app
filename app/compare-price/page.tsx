@@ -1,6 +1,5 @@
-import { AppHeader } from "@/components/AppHeader";
+import { AppHeader, AppFooter } from "@/components/layout";
 import { CompareWrapper } from "./CompareWrapper";
-import { AppFooter } from "@/components/AppFooter";
 
 export default function ComparePricePage() {
   return (

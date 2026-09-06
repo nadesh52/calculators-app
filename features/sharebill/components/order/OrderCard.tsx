@@ -1,7 +1,6 @@
 "use client";
-
 import { Receipt, EllipsisVertical } from "lucide-react";
-import { toDecimal } from "@/utils";
+import { formatNumber } from "@/utils";
 import { UserAvatar } from "@/components";
 
 const MAX_AVATARS = 4;
@@ -62,11 +61,11 @@ export default function OrderCard({ o, onOpen }: any) {
         {/* ยอดเงินรวม & เฉลี่ยต่อคน */}
         <div className="flex flex-col items-end">
           <p className="rounded-lg bg-indigo-50 px-2 py-0.5 text-xs font-bold text-indigo-600">
-            ฿{Number(o.total || 0).toLocaleString()}
+            {formatNumber(Number(o.total || 0))}
           </p>
           {o.people?.length ? (
             <p className="mt-0.5 text-[11px] text-zinc-400">
-              ฿{toDecimal(o.price_per_people)}/คน
+              {formatNumber(o.price_per_people)}/คน
             </p>
           ) : null}
         </div>

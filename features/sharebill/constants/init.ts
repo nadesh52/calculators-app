@@ -4,4 +4,5 @@ export const initOrder: Order = {
   name: null,
   price: null,
   quantity: null,
+  people: [],
 };

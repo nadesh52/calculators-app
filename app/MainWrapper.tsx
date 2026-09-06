@@ -1,12 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
-import { AppHeader, appList } from "@/components/AppHeader";
-import { CompareWrapper } from "@/app/compare-price/CompareWrapper";
-import { InterestWrapper } from "@/app/interest-calc/InterestWrapper";
-import { ShareBillWrapper } from "@/app/share-bill/ShareBillWrapper";
+import { AppHeader, appList } from "@/components/layout/AppHeader";
 import { Sparkles, ArrowRight, ExternalLink, Plus } from "lucide-react";
+import { InterestWrapper } from "./interest-calc/InterestWrapper";
+import { ShareBillWrapper } from "./share-bill/ShareBillWrapper";
+import { CompareWrapper } from "./compare-price/CompareWrapper";
 
 export default function MainWrapper() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -23,7 +22,7 @@ export default function MainWrapper() {
         return (
           <div className="mx-auto max-w-4xl space-y-8 px-4 py-8 sm:px-6">
             {/* Hero Banner */}
-            <div className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50/60 via-white to-zinc-50 p-6 text-center shadow-xs sm:p-10">
+            <div className="rounded-3xl border border-indigo-100 bg-linear-to-br from-indigo-50/60 via-white to-zinc-50 p-6 text-center shadow-xs sm:p-10">
               <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-xs">
                 <Sparkles size={24} />
               </div>

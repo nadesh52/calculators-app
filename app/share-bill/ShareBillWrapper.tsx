@@ -6,15 +6,14 @@ import {
   OrderTab,
   TabGroup,
   SummaryTab,
-} from "@/features/sharebill";
+} from "@/features/sharebill/components";
+import { TabKey } from "@/features/sharebill/types";
 
 const TABS = {
   people: <PeopleTab />,
   order: <OrderTab />,
   summary: <SummaryTab />,
 };
-
-type TabKey = keyof typeof TABS;
 
 export function ShareBillWrapper() {
   const [activeTab, setActiveTab] = useState<TabKey>("order");

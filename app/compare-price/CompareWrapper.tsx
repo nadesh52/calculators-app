@@ -1,9 +1,11 @@
 "use client";
-
-import React, { useCallback, useEffect, useState } from "react";
-import { ResultCard } from "@/features/comparison/components/ResultCard";
-import { ResetButton } from "@/features/comparison/components/ResetButton";
-import { ProductList, Form } from "@/features/comparison/components";
+import { useCallback, useEffect, useState } from "react";
+import {
+  ResultCard,
+  ResetButton,
+  ProductList,
+  Form,
+} from "@/features/comparison/components";
 import { Plus, X } from "lucide-react";
 
 const getStoredItems = () => {

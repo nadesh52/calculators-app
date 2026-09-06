@@ -1,14 +1,13 @@
 import { UserAvatar } from "@/components";
-import { colorFromName } from "@/utils";
-import { Trash, Trash2, UserCheck, Users } from "lucide-react";
-import React from "react";
+import { Trash2, UserCheck, Users } from "lucide-react";
+
 type PeopleListProps = {
   people: any[];
   onDelete: (id: string) => void;
   onClearAll: () => void;
 };
 
-export function PeopleList({ people, onDelete, onClearAll }: PeopleListProps) {
+export default function PeopleList({ people, onDelete, onClearAll }: PeopleListProps) {
   const count = people?.length ?? 0;
 
   return (

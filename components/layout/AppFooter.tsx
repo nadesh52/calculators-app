@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { Calculator, Scale, Percent, Receipt } from "lucide-react";
 

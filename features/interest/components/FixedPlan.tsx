@@ -1,26 +1,12 @@
 "use client";
-
 import React, { useReducer } from "react";
 import { Coins, Percent } from "lucide-react";
 import { MonthSelect } from "./MonthSelect";
 import { DatePicker } from "./DatePicker";
-import { Input } from "./Input";
-import { getDayDiff } from "@/utils/get-day-diff";
-import { useResultContext } from "@/features/interest/contexts/ResultContext";
-import { interestCalculator } from "@/utils/interest-calculator";
-import {
-  fixedInit,
-  fixedReducer,
-} from "@/features/interest/hooks/fixedReducer";
-
-const getDay = (dateTimestamp: number, monthDuration: number) => {
-  const startDate = new Date(dateTimestamp);
-  const endDate = new Date(dateTimestamp);
-
-  endDate.setMonth(endDate.getMonth() + Number(monthDuration));
-
-  return getDayDiff(startDate.getTime(), endDate.getTime());
-};
+import { Input } from "@/components/ui/Input";
+import { useResultContext } from "@/features/interest/contexts";
+import { interestCalculator, getDayCount } from "@/utils";
+import { fixedInit, fixedReducer } from "@/features/interest/hooks";
 
 export function FixedPlan() {
   const { setPlanResult } = useResultContext();
@@ -35,7 +21,7 @@ export function FixedPlan() {
       return;
     }
 
-    const days = getDay(start, month);
+    const days = getDayCount(start, month);
     const res = interestCalculator(amount, rate, days);
     const sum = Number(amount) + res;
 
@@ -62,10 +48,10 @@ export function FixedPlan() {
         required
         placeholder="เช่น 100,000"
         leftIcon={<Coins size={15} />}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        onChange={(e) =>
           dispatch({
             type: "update",
-            payload: { amount: Number(e.target.value) || 0 },
+            payload: { amount: Number(e.target.value) },
           })
         }
       />

@@ -1,7 +1,6 @@
 "use client";
-
 import { useEffect, useMemo, useState } from "react";
-import { ReceiptText, PlusCircle } from "lucide-react";
+import { ReceiptText } from "lucide-react";
 import { Modal } from "@/components";
 import { useOrder } from "@/features/sharebill/contexts";
 import OrderForm from "./OrderForm";
@@ -86,7 +85,7 @@ export default function OrderList() {
             <p className="text-xs text-zinc-500">
               {order.length} รายการ · ยอดรวม{" "}
               <span className="font-bold text-indigo-600">
-                ฿{grandTotal.toLocaleString()}
+                {grandTotal.toLocaleString()}
               </span>
             </p>
           ) : null}

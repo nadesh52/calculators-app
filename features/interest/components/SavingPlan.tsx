@@ -1,16 +1,11 @@
 "use client";
-
 import React, { useReducer } from "react";
 import { Coins, Percent } from "lucide-react";
 import { DatePicker } from "./DatePicker";
-import { Input } from "./Input";
-import { useResultContext } from "@/features/interest/contexts/ResultContext";
-import { getDayDiff } from "@/utils/get-day-diff";
-import { interestCalculator } from "@/utils/interest-calculator";
-import {
-  savingInit,
-  savingReducer,
-} from "@/features/interest/hooks/savingReducer";
+import { Input } from "@/components/ui/Input";
+import { useResultContext } from "@/features/interest/contexts";
+import { interestCalculator, getDayCount } from "@/utils";
+import { savingInit, savingReducer } from "@/features/interest/hooks";
 
 export function SavingPlan() {
   const { setPlanResult } = useResultContext();
@@ -35,7 +30,7 @@ export function SavingPlan() {
       return;
     }
 
-    const dayDiff = getDayDiff(start, end);
+    const dayDiff = getDayCount(start, end);
     const interest = interestCalculator(amount, rate, dayDiff);
     const sum = Number(amount) + interest;
 

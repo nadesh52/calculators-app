@@ -1,19 +1,22 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { useResultContext } from "@/features/interest/contexts/ResultContext";
-import { TrendingUp, Coins, Percent, Calendar, Wallet, PiggyBank, Landmark } from "lucide-react";
+import { useResultContext } from "../contexts";
+import {
+  TrendingUp,
+  Coins,
+  Percent,
+  Calendar,
+  Wallet,
+  PiggyBank,
+  Landmark,
+} from "lucide-react";
+import { formatNumber } from "@/utils";
 
-const formatNumber = (n: any) => {
-  const num = Number(n);
-  if (isNaN(num) || num === undefined || num === null) return "0.00";
-  return num.toLocaleString("th-TH", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+type Props = {
+  activeTab?: "saving" | "fixed";
 };
 
-export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
+export function ResultBox({ activeTab }: Props) {
   const { results } = useResultContext();
   const [viewTab, setViewTab] = useState<"saving" | "fixed">("saving");
 
@@ -42,10 +45,11 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
 
   const amount = Number(currentResult.amount) || 0;
   const total = Number(currentResult.total) || 0;
-  const interestEarned = currentResult.interestAmount ?? Math.max(0, total - amount);
+  const interestEarned =
+    currentResult.interestAmount ?? Math.max(0, total - amount);
 
   return (
-    <div className="w-full space-y-3.5 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xl sm:p-5 transition-all animate-in fade-in slide-in-from-bottom-2">
+    <div className="animate-in fade-in slide-in-from-bottom-2 w-full space-y-3.5 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xl transition-all sm:p-5">
       {/* Header + Result Switcher (กรณีมีผลลัพธ์ทั้งคู่) */}
       <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5">
         <div className="flex items-center gap-2">
@@ -62,7 +66,9 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
               type="button"
               onClick={() => setViewTab("saving")}
               className={`flex items-center gap-1 rounded-md px-2 py-0.5 transition ${
-                viewTab === "saving" ? "bg-white text-indigo-600 shadow-xs" : "text-zinc-500"
+                viewTab === "saving"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-zinc-500"
               }`}
             >
               <PiggyBank size={12} />
@@ -72,7 +78,9 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
               type="button"
               onClick={() => setViewTab("fixed")}
               className={`flex items-center gap-1 rounded-md px-2 py-0.5 transition ${
-                viewTab === "fixed" ? "bg-white text-indigo-600 shadow-xs" : "text-zinc-500"
+                viewTab === "fixed"
+                  ? "bg-white text-indigo-600 shadow-xs"
+                  : "text-zinc-500"
               }`}
             >
               <Landmark size={12} />
@@ -92,7 +100,7 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
           ดอกเบี้ยที่ได้รับทั้งหมด
         </p>
         <p className="mt-0.5 text-2xl font-black tracking-tight text-emerald-600">
-          +฿{formatNumber(interestEarned)}
+          +{formatNumber(interestEarned)}
         </p>
       </div>
 
@@ -103,7 +111,9 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
             <Coins size={14} className="text-zinc-400" />
             <span>เงินต้นฝากเริ่มต้น</span>
           </div>
-          <span className="font-semibold text-zinc-800">฿{formatNumber(amount)}</span>
+          <span className="font-semibold text-zinc-800">
+            {formatNumber(amount)}
+          </span>
         </div>
 
         <div className="flex items-center justify-between text-zinc-600">
@@ -111,7 +121,9 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
             <Percent size={14} className="text-zinc-400" />
             <span>อัตราดอกเบี้ย</span>
           </div>
-          <span className="font-semibold text-zinc-800">{currentResult.interest}% ต่อปี</span>
+          <span className="font-semibold text-zinc-800">
+            {currentResult.interest}% ต่อปี
+          </span>
         </div>
 
         <div className="flex items-center justify-between text-zinc-600">
@@ -119,7 +131,9 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
             <Calendar size={14} className="text-zinc-400" />
             <span>ระยะเวลาฝาก</span>
           </div>
-          <span className="font-semibold text-zinc-800">{currentResult.day} วัน</span>
+          <span className="font-semibold text-zinc-800">
+            {currentResult.day} วัน
+          </span>
         </div>
 
         <div className="my-1.5 border-t border-dashed border-zinc-200" />
@@ -129,8 +143,8 @@ export function ResultBox({ activeTab }: { activeTab?: "saving" | "fixed" }) {
             <Wallet size={15} className="text-indigo-600" />
             <span>ยอดเงินรวมทั้งหมด</span>
           </div>
-          <span className="text-sm sm:text-base font-black text-indigo-600">
-            ฿{formatNumber(total)}
+          <span className="text-sm font-black text-indigo-600 sm:text-base">
+            {formatNumber(total)}
           </span>
         </div>
       </div>

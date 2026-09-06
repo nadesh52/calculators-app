@@ -1,16 +1,66 @@
 "use client";
-
-import { Input } from "@/features/interest/components";
 import { Package, Plus, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-const inputInit = { count: "1", quantity: "", price: "" };
+import { initItem } from "../constants";
+import { Input } from "@/components/ui";
 
 export function Form({ formData }: { formData: (item: any) => void }) {
   const [mode, setMode] = useState<"single" | "pack">("single");
-  const [inputs, setInputs] = useState<any>(inputInit);
+  const [items, setItems] = useState<any>(initItem);
   const [itemCount, setItemCount] = useState(0);
+
+  const handleModeChange = (newMode: "single" | "pack") => {
+    setMode(newMode);
+    setItems({
+      ...initItem,
+      count: newMode === "single" ? "1" : "",
+    });
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setItems((values: any) => ({ ...values, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // count = จำนวนชิ้น (ถ้าชิ้นเดี่ยวคำนวณเป็น 1 ชิ้น)
+    const count = mode === "single" ? 1 : Number(items.count);
+    const quantityPerUnit = Number(items.quantity);
+    const price = Number(items.price);
+
+    if (!count || !quantityPerUnit || !price) return;
+
+    // ปริมาณรวมทั้งหมด = จำนวนชิ้น × ปริมาณต่อชิ้น
+    const totalQuantity = quantityPerUnit * count;
+
+    // ปริมาณที่ได้ต่อ 1 บาท (ยิ่งเยอะยิ่งคุ้ม)
+    const average = Number((totalQuantity / price).toFixed(2));
+    const nextNumber = itemCount + 1;
+
+    const newItem = {
+      id: uuidv4(),
+      number: nextNumber,
+      quantity: totalQuantity, // ปริมาณรวมสุทธิ
+      price, // ราคารวม/ราคาแพ็ค
+      count, // จำนวนชิ้น
+      average, // ค่าเฉลี่ยความคุ้มค่า
+    };
+
+    formData(newItem);
+    setItems(mode === "single" ? { ...initItem, count: "1" } : initItem);
+    setItemCount(nextNumber);
+  };
+
+  useEffect(() => {
+    function handleReset() {
+      setItemCount(0);
+    }
+    window.addEventListener("itemsReset", handleReset);
+    return () => window.removeEventListener("itemsReset", handleReset);
+  }, []);
 
   // ดึงค่า itemCount หลัง Mount ฝั่ง Client เท่านั้น
   useEffect(() => {
@@ -27,58 +77,6 @@ export function Form({ formData }: { formData: (item: any) => void }) {
     } catch (e) {
       console.error("Failed to load itemCount from localStorage:", e);
     }
-  }, []);
-
-  const handleModeChange = (newMode: "single" | "pack") => {
-    setMode(newMode);
-    setInputs({
-      ...inputInit,
-      count: newMode === "single" ? "1" : "",
-    });
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setInputs((values: any) => ({ ...values, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // count = จำนวนชิ้น (ถ้าชิ้นเดี่ยวคำนวณเป็น 1 ชิ้น)
-    const count = mode === "single" ? 1 : Number(inputs.count);
-    const quantityPerUnit = Number(inputs.quantity);
-    const price = Number(inputs.price);
-
-    if (!count || !quantityPerUnit || !price) return;
-
-    // ปริมาณรวมทั้งหมด = จำนวนชิ้น × ปริมาณต่อชิ้น
-    const totalQuantity = quantityPerUnit * count;
-    
-    // ปริมาณที่ได้ต่อ 1 บาท (ยิ่งเยอะยิ่งคุ้ม)
-    const average = Number((totalQuantity / price).toFixed(2));
-    const nextNumber = itemCount + 1;
-
-    const newItem = {
-      id: uuidv4(),
-      number: nextNumber,
-      quantity: totalQuantity, // ปริมาณรวมสุทธิ
-      price,                    // ราคารวม/ราคาแพ็ค
-      count,                    // จำนวนชิ้น
-      average,                  // ค่าเฉลี่ยความคุ้มค่า
-    };
-
-    formData(newItem);
-    setInputs(mode === "single" ? { ...inputInit, count: "1" } : inputInit);
-    setItemCount(nextNumber);
-  };
-
-  useEffect(() => {
-    function handleReset() {
-      setItemCount(0);
-    }
-    window.addEventListener("itemsReset", handleReset);
-    return () => window.removeEventListener("itemsReset", handleReset);
   }, []);
 
   return (
@@ -124,7 +122,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
         </button>
       </div>
 
-      {/* Inputs Grid */}
+      {/* items Grid */}
       <div
         className={`grid gap-2.5 ${
           mode === "pack" ? "grid-cols-3" : "grid-cols-2"
@@ -136,7 +134,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
             label="จำนวนชิ้นในแพ็ค"
             type="number"
             name="count"
-            value={inputs.count}
+            value={items.count}
             onChange={handleChange}
             required
             placeholder="เช่น 6"
@@ -148,7 +146,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
           label={mode === "pack" ? "ปริมาณต่อชิ้น" : "ปริมาณ (กรัม/มล.)"}
           type="number"
           name="quantity"
-          value={inputs.quantity}
+          value={items.quantity}
           onChange={handleChange}
           required
           placeholder="เช่น 250"
@@ -160,7 +158,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
           label={mode === "pack" ? "ราคาแพ็ค (บาท)" : "ราคา (บาท)"}
           type="number"
           name="price"
-          value={inputs.price}
+          value={items.price}
           onChange={handleChange}
           required
           placeholder="เช่น 120"

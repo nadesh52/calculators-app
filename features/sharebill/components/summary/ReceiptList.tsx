@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -22,13 +20,6 @@ export interface ReceiptOrderItem {
   total: number;
 }
 
-export interface ReceiptListProps {
-  orders: ReceiptOrderItem[];
-  showAllOrders: boolean;
-  onToggleShowAll: () => void;
-  previewLimit?: number;
-}
-
 // 📌 Helper mapping ไอคอนหมวดหมู่ (พร้อมรองรับ Category ในอนาคต)
 const categoryIcons: Record<string, LucideIcon> = {
   food: Utensils,
@@ -37,6 +28,13 @@ const categoryIcons: Record<string, LucideIcon> = {
   shopping: ShoppingBag,
   default: Receipt,
 };
+
+export interface ReceiptListProps {
+  orders: ReceiptOrderItem[];
+  showAllOrders: boolean;
+  onToggleShowAll: () => void;
+  previewLimit?: number;
+}
 
 export default function ReceiptList({
   orders = [],
@@ -82,7 +80,7 @@ export default function ReceiptList({
             </span>
           </div>
           <span className="min-w-16 text-right font-mono text-sm font-bold text-zinc-800 tabular-nums">
-            ฿{Number(o.total || 0).toLocaleString()}
+            {Number(o.total || 0).toLocaleString()}
           </span>
         </div>
       </div>

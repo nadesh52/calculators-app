@@ -1,20 +1,7 @@
 "use client";
-
-import React from "react";
-import {
-  X,
-  User,
-  LayoutGrid,
-  Clock,
-  CheckCircle2,
-  LucideIcon,
-} from "lucide-react";
-
-export interface FilterOption<T extends string = string> {
-  key: T;
-  label: string;
-  icon?: LucideIcon; // 👈 รองรับ icon กำหนดเองได้
-}
+import { X, User } from "lucide-react";
+import { FilterOption } from "../../types";
+import { DEFAULT_FILTERS } from "../../constants";
 
 export interface SelectedPerson {
   id: string;
@@ -28,13 +15,6 @@ export interface FilterButtonsProps<T extends string = string> {
   selectedPerson?: SelectedPerson | null;
   onClearSelectedPerson?: () => void;
 }
-
-// 📌 ค่า default ของปุ่ม filter พร้อมไอคอนประจำปุ่ม
-const DEFAULT_FILTERS: FilterOption[] = [
-  { key: "all", label: "ทั้งหมด", icon: LayoutGrid },
-  { key: "unpaid", label: "ยังไม่จ่าย", icon: Clock },
-  { key: "paid", label: "จ่ายแล้ว", icon: CheckCircle2 },
-];
 
 export default function FilterButtons<T extends string = string>({
   filterMode,

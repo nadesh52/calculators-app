@@ -1,6 +1,6 @@
 import { RotateCcw } from "lucide-react";
 
-export function ResetButton({ reset }: any) {
+export function ResetButton({ reset }: { reset: ([]) => void }) {
   return (
     <button
       onClick={() => reset([])}

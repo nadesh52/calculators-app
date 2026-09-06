@@ -1,17 +1,14 @@
 "use client";
-
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { usePeople, useOrder } from "@/features/sharebill/contexts";
 import { v4 as uuidv4 } from "uuid";
-import { PeopleList } from "./PeopleList";
-import { PeopleCreate } from "./PeopleCreate";
+import PeopleList from "./PeopleList";
+import PeopleCreate from "./PeopleCreate";
 
 export function PeopleTab() {
   const { people, setPeople } = usePeople();
   const { order, setOrder } = useOrder();
   const [query, setQuery] = useState("");
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +27,6 @@ export function PeopleTab() {
     });
 
     setQuery("");
-    inputRef.current?.focus();
   };
 
   const handleDelete = (id: string) => {
@@ -103,8 +99,6 @@ export function PeopleTab() {
 
     // 3. ล้างรายชื่อคนที่จ่ายเงินแล้ว
     localStorage.setItem("paidPeople", JSON.stringify([]));
-
-    inputRef.current?.focus();
   };
 
   const isDisable =
@@ -115,10 +109,9 @@ export function PeopleTab() {
     );
 
   return (
-    <section className="mx-auto w-full max-w-2xl space-y-5 px-1 py-2">
+    <section className="mx-auto w-full max-w-2xl space-y-6 p-4 sm:max-w-2xl">
       {/* ส่วนเพิ่มรายชื่อผู้หารใหม่ */}
       <PeopleCreate
-        inputRef={inputRef}
         query={query}
         setQuery={setQuery}
         isDisable={isDisable}

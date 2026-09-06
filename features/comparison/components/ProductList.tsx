@@ -1,20 +1,13 @@
 "use client";
-
+import { formatNumber } from "@/utils";
 import { Crown, Package, ShoppingBag, ThumbsDown, Trash2 } from "lucide-react";
 
-const formatNumber = (n: number) => {
-  const num = Number(n);
-  if (isNaN(num)) return "0";
-  return num.toLocaleString("th-TH", { maximumFractionDigits: 2 });
-};
-
-export function ProductList({
-  items,
-  removeId,
-}: {
+type Props = {
   items?: any[];
   removeId: (id: string) => void;
-}) {
+};
+
+export function ProductList({ items, removeId }: Props) {
   if (!items || items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-zinc-200 bg-white/50 px-4 py-12 text-center">
@@ -124,7 +117,7 @@ export function ProductList({
                     <span>
                       ราคา{" "}
                       <strong className="font-semibold text-zinc-800">
-                        ฿{formatNumber(item.price)}
+                        {formatNumber(item.price)}
                       </strong>
                     </span>
                   </div>

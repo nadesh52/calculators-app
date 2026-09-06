@@ -1,7 +1,6 @@
 import { UserAvatar } from "@/components";
-import { toDecimal } from "@/utils";
+import { formatNumber } from "@/utils";
 import { CheckCircle2, Circle, Receipt, UtensilsCrossed } from "lucide-react";
-import React from "react";
 
 export interface OrderItem {
   id: string;
@@ -60,7 +59,7 @@ export default function SummaryCard({
             {/* ส่วนหัวการ์ด (Avatar + ชื่อ + ปุ่มสถานะ) */}
             <div className="p-3.5 pb-3">
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex min-w-0 items-center gap-2.5">
                   <UserAvatar name={person.name} />
                   <h3 className="truncate text-sm font-bold text-zinc-800">
                     {person.name}
@@ -74,12 +73,15 @@ export default function SummaryCard({
                   className={`flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition active:scale-95 ${
                     isPaid
                       ? "bg-emerald-100/80 text-emerald-700 hover:bg-emerald-200/80"
-                      : "bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100/80"
+                      : "border border-rose-100 bg-rose-50 text-rose-600 hover:bg-rose-100/80"
                   }`}
                 >
                   {isPaid ? (
                     <>
-                      <CheckCircle2 size={13} className="shrink-0 text-emerald-600" />
+                      <CheckCircle2
+                        size={13}
+                        className="shrink-0 text-emerald-600"
+                      />
                       <span>จ่ายแล้ว</span>
                     </>
                   ) : (
@@ -99,22 +101,22 @@ export default function SummaryCard({
                       key={o.id}
                       className="flex items-center justify-between gap-2 text-xs"
                     >
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="size-1 rounded-full bg-zinc-300 shrink-0" />
-                        <span className="truncate text-zinc-600 font-medium">
+                      <div className="flex min-w-0 items-center gap-1.5">
+                        <span className="size-1 shrink-0 rounded-full bg-zinc-300" />
+                        <span className="truncate font-medium text-zinc-600">
                           {o.name}
                         </span>
-                        <span className="rounded-md bg-zinc-100 px-1 py-0.2 text-[10px] font-bold text-zinc-400">
+                        <span className="py-0.2 rounded-md bg-zinc-100 px-1 text-[10px] font-bold text-zinc-400">
                           x{o.quantity}
                         </span>
                       </div>
                       <span className="shrink-0 font-mono font-medium text-zinc-700 tabular-nums">
-                        ฿{toDecimal(o.price_per_people)}
+                        {formatNumber(o.price_per_people)}
                       </span>
                     </div>
                   ))
                 ) : (
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-400 py-1">
+                  <div className="flex items-center gap-1.5 py-1 text-xs text-zinc-400">
                     <UtensilsCrossed size={12} className="text-zinc-300" />
                     <span>ไม่ได้สั่งรายการใดๆ</span>
                   </div>
@@ -138,7 +140,7 @@ export default function SummaryCard({
                   isPaid ? "text-emerald-600" : "text-indigo-600"
                 }`}
               >
-                ฿{toDecimal(person.total)}
+                {formatNumber(person.total)}
               </span>
             </div>
           </div>

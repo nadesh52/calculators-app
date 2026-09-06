@@ -1,11 +1,9 @@
 "use client";
-
-import { RefObject, KeyboardEvent, MouseEvent } from "react";
-import { User, Plus, Users, Trash2, UserCheck } from "lucide-react";
-import { UserAvatar } from "@/components";
+import { KeyboardEvent, MouseEvent } from "react";
+import { User, Plus } from "lucide-react";
+import { Input } from "@/components/ui";
 
 interface PeopleCreateProps {
-  inputRef?: RefObject<HTMLInputElement | null>;
   query: string;
   setQuery: (val: string) => void;
   isDisable: boolean;
@@ -14,8 +12,7 @@ interface PeopleCreateProps {
   ) => void;
 }
 
-export function PeopleCreate({
-  inputRef,
+export default function PeopleCreate({
   query,
   setQuery,
   isDisable,
@@ -23,21 +20,14 @@ export function PeopleCreate({
 }: PeopleCreateProps) {
   return (
     <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xs sm:p-5">
-      <p className="mb-2.5 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-        เพิ่มผู้เข้าร่วม
-      </p>
       <div className="flex gap-2">
-        <div className="relative flex min-w-0 flex-1 items-center">
-          <div className="pointer-events-none absolute left-3.5 text-zinc-400">
-            <User size={18} />
-          </div>
-          <input
-            ref={inputRef}
+        <div className="w-full">
+          <Input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value.trimStart())}
             placeholder="ป้อนชื่อ (เช่น สมชาย, โบว์)..."
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pr-4 pl-10 text-sm font-medium text-zinc-800 transition outline-none placeholder:font-normal placeholder:text-zinc-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+            leftIcon={<User size={16} />}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isDisable) {
                 handleAdd(e);

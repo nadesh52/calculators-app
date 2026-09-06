@@ -1,29 +1,16 @@
 "use client";
-
-import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const formatNumber = (n: number) => {
-  const num = Number(n);
-  if (isNaN(num)) return "0";
-  return num.toLocaleString("th-TH", { maximumFractionDigits: 2 });
-};
-
-const inputRes = { number: "-", quantity: 0, price: 0, count: 0, average: 0 };
-
-const findBest = (items: any[]) => {
-  if (!items || items.length === 0) return null;
-  return items.reduce((best: any, current: any) =>
-    (current?.average || 0) > (best?.average || 0) ? current : best,
-  );
-};
+import { Trophy } from "lucide-react";
+import { formatNumber } from "@/utils";
+import { initResult } from "../constants";
+import { findBest } from "../utils";
 
 export function ResultCard({ items }: { items?: any[] }) {
-  const [result, setResult] = useState<any>(inputRes);
+  const [result, setResult] = useState<any>(initResult);
   const hasItems = items && items.length > 0;
 
   useEffect(() => {
-    setResult(hasItems ? findBest(items) : inputRes);
+    setResult(hasItems ? findBest(items) : initResult);
   }, [items, hasItems]);
 
   return (
@@ -75,7 +62,7 @@ export function ResultCard({ items }: { items?: any[] }) {
             <div className="text-right">
               <p className="text-[10px] font-medium text-indigo-200">ราคา</p>
               <p className="text-xs font-semibold text-emerald-300">
-                ฿{formatNumber(result.price)}
+                {formatNumber(result.price)}
               </p>
             </div>
           </div>

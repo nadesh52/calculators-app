@@ -1,5 +1,4 @@
-import { toDecimal } from "@/utils";
-import React from "react";
+import { formatNumber } from "@/utils";
 import { Wallet, CheckCircle2, AlertCircle } from "lucide-react";
 
 type Props = {
@@ -20,7 +19,7 @@ export default function StatCard({
         <Wallet size={16} className="absolute top-2.5 left-2.5 text-zinc-400" />
         <div className="pl-5 text-right">
           <p className="font-bold text-zinc-800 sm:text-lg">
-            ฿{toDecimal(totalAmount)}
+            {formatNumber(totalAmount)}
           </p>
           <p className="text-xs font-medium text-zinc-400">ยอดรวม</p>
         </div>
@@ -34,7 +33,7 @@ export default function StatCard({
         />
         <div className="pl-5 text-right">
           <p className="font-bold text-emerald-600 sm:text-lg">
-            ฿{toDecimal(collectedAmount)}
+            {formatNumber(collectedAmount)}
           </p>
           <p className="text-xs font-medium text-emerald-600/80">จ่ายมาแล้ว</p>
         </div>
@@ -48,7 +47,7 @@ export default function StatCard({
         />
         <div className="pl-5 text-right">
           <p className="font-bold text-rose-500 sm:text-lg">
-            ฿{toDecimal(outstandingAmount)}
+            {formatNumber(outstandingAmount)}
           </p>
           <p className="text-xs font-medium text-rose-500/80">ค้างชำระ</p>
         </div>

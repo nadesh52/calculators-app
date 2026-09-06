@@ -1,7 +1,7 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { usePeople } from "@/features/sharebill/contexts";
+import { UserAvatar } from "@/components";
 import {
   Tag,
   Banknote,
@@ -15,32 +15,19 @@ import {
   Check,
   Plus,
 } from "lucide-react";
-import { colorFromName } from "@/utils";
-import { UserAvatar } from "@/components";
-
-const inputsInit = { name: "", price: 0, quantity: 1, people: [] };
-
-// รายการชื่อที่ใช้บ่อยสำหรับกดเลือกไวๆ
-const QUICK_TAGS = [
-  "ค่าอาหาร",
-  "เครื่องดื่ม",
-  "ค่าเดินทาง",
-  "ค่าน้ำมัน",
-  "ค่าที่พัก",
-  "ค่าของหวาน",
-  "ค่าเข้าชม",
-];
+import { initOrder, QUICKBAR_MENU } from "../../constants";
+import { Input } from "@/components/ui";
 
 export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
   const { people } = usePeople();
-  const [inputs, setInputs] = useState<any>(inputsInit);
+  const [orders, setOrders] = useState<any>(initOrder);
   const [mode, setMode] = useState<"create" | "edit">("create");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
     const payload =
-      mode === "edit" && order ? { ...inputs, id: order.id } : inputs;
+      mode === "edit" && order ? { ...orders, id: order.id } : orders;
 
     onSubmit(payload);
 
@@ -52,12 +39,12 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
 
     if (name === "price" || name === "quantity") {
       const numValue = value === "" ? "" : parseFloat(value);
-      setInputs((prev: any) => ({
+      setOrders((prev: any) => ({
         ...prev,
         [name]: numValue,
       }));
     } else {
-      setInputs((prev: any) => ({
+      setOrders((prev: any) => ({
         ...prev,
         [name]: value,
       }));
@@ -66,7 +53,7 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
 
   // ฟังก์ชันสำหรับเลือกชื่อรายการจาก Tag ไวๆ
   const handleSelectQuickTag = (tagName: string) => {
-    setInputs((prev: any) => ({
+    setOrders((prev: any) => ({
       ...prev,
       name: tagName,
     }));
@@ -76,9 +63,9 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
     event.preventDefault();
 
     if (type === "increase") {
-      setInputs({ ...inputs, quantity: (inputs.quantity || 0) + 1 });
-    } else if (type === "decrease" && inputs.quantity > 1) {
-      setInputs({ ...inputs, quantity: inputs.quantity - 1 });
+      setOrders({ ...orders, quantity: (orders.quantity || 0) + 1 });
+    } else if (type === "decrease" && orders.quantity > 1) {
+      setOrders({ ...orders, quantity: orders.quantity - 1 });
     }
   };
 
@@ -91,14 +78,14 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
 
   const handleClose = () => {
     onClose();
-    setInputs(inputsInit);
+    setOrders(initOrder);
     setMode("create");
   };
 
   const handleTogglePerson = (person: any) => {
-    const exists = inputs.people.some((p: any) => p.id === person.id);
+    const exists = orders.people.some((p: any) => p.id === person.id);
 
-    setInputs((prev: any) => ({
+    setOrders((prev: any) => ({
       ...prev,
       people: exists
         ? prev.people.filter((p: any) => p.id !== person.id)
@@ -107,29 +94,29 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
   };
 
   const handleSelectAll = () => {
-    setInputs((prev: any) => ({
+    setOrders((prev: any) => ({
       ...prev,
       people: [...people],
     }));
   };
 
   const handleDeselectAll = () => {
-    setInputs((prev: any) => ({
+    setOrders((prev: any) => ({
       ...prev,
       people: [],
     }));
   };
 
   const unselectedPeople = people.filter(
-    (p: any) => !inputs.people.some((sel: any) => sel.id === p.id),
+    (p: any) => !orders.people.some((sel: any) => sel.id === p.id),
   );
 
-  const isDisable = inputs.quantity <= 1;
-  const subtotal = (inputs.price || 0) * (inputs.quantity || 0);
+  const isDisable = orders.quantity <= 1;
+  const subtotal = (orders.price || 0) * (orders.quantity || 0);
 
   useEffect(() => {
     if (order) {
-      setInputs({
+      setOrders({
         name: order.name || "",
         quantity: order.quantity || 1,
         price: order.price || 0,
@@ -137,7 +124,7 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
       });
       setMode("edit");
     } else {
-      setInputs(inputsInit || { name: "", quantity: 1, price: 0, people: [] });
+      setOrders(initOrder || { name: "", quantity: 1, price: 0, people: [] });
       setMode("create");
     }
   }, [order]);
@@ -171,44 +158,31 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
       {/* กลุ่มรายละเอียดรายการ */}
       <div className="space-y-3 rounded-2xl bg-zinc-50/70 p-4 ring-1 ring-zinc-200/60">
         <label className="block">
-          <p className="mb-1.5 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-            ชื่อรายการ
-          </p>
-          <div className="relative flex items-center">
-            <div className="pointer-events-none absolute left-3.5 text-zinc-400">
-              <Tag size={16} />
-            </div>
-            <input
-              name="name"
-              type="text"
-              autoComplete="off"
-              required
-              onChange={handleChange}
-              value={inputs.name || ""}
-              placeholder="เช่น ค่าอาหาร, ค่าน้ำมัน, ค่าที่พัก"
-              className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pr-4 pl-10 text-sm font-medium text-zinc-800 transition outline-none placeholder:font-normal placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-            />
-          </div>
+          <Input
+            label="ชื่อรายการ"
+            name="name"
+            type="text"
+            autoComplete="off"
+            required
+            value={orders.name || ""}
+            onChange={handleChange}
+            placeholder="ค่าอาหาร, ค่าน้ำมัน, ค่าที่พัก"
+            leftIcon={<Tag size={16} />}
+            className="text-left"
+          />
 
           {/* Quick Action Presets - ปรับสไตล์ให้เป็นปุ่มกดแอคชันด่วน */}
           <div className="mt-3">
             <div className="mb-1.5 flex items-center justify-between">
-              <span className="text-[11px] font-medium text-zinc-400">
+              <span className="text-xs font-medium text-zinc-400">
                 ⚡ เลือกรายการด่วน
               </span>
             </div>
 
             {/* สไลด์แนวนอนสไตล์ Quick Bar */}
             <div className="flex scrollbar-none items-center gap-1.5 overflow-x-auto pb-1">
-              {[
-                { label: "อาหาร", value: "ค่าอาหาร" },
-                { label: "เครื่องดื่ม", value: "ค่าเครื่องดื่ม" },
-                { label: "เดินทาง", value: "ค่าเดินทาง" },
-                { label: "เติมน้ำมัน", value: "น้ำมัน" },
-                { label: "ค่าที่พัก", value: "ที่พัก" },
-                { label: "ของว่าง", value: "ขนม" },
-              ].map((item) => {
-                const isSelected = inputs.name === item.value;
+              {QUICKBAR_MENU.map((item) => {
+                const isSelected = orders.name === item.value;
                 return (
                   <button
                     key={item.value}
@@ -233,44 +207,31 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
         </label>
 
         <div className="grid grid-cols-2 gap-3">
-          <label className="block">
-            <p className="mb-1.5 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-              ราคาต่อหน่วย
-            </p>
-            <div className="relative flex items-center">
-              <div className="pointer-events-none absolute left-3.5 text-zinc-400">
-                <Banknote size={16} />
-              </div>
-              <input
-                name="price"
-                type="number"
-                autoComplete="off"
-                required
-                onChange={handleChange}
-                value={inputs.price || ""}
-                placeholder="0.00"
-                className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pr-4 pl-10 text-sm font-medium text-zinc-800 transition outline-none placeholder:font-normal placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-              />
-            </div>
-          </label>
+          <Input
+            label="ราคาต่อหน่วย"
+            name="price"
+            type="number"
+            autoComplete="off"
+            required
+            onChange={handleChange}
+            value={orders.price || ""}
+            placeholder="0.00"
+            leftIcon={<Banknote size={16} />}
+            className="text-center"
+          />
 
-          <label className="block">
-            <p className="mb-1.5 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-              จำนวน
-            </p>
-            <div className="relative flex items-stretch overflow-hidden rounded-xl border border-zinc-200 bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100">
-              <div className="pointer-events-none flex items-center pl-3.5 text-zinc-400">
-                <Hash size={16} />
-              </div>
-              <input
-                name="quantity"
-                type="number"
-                autoComplete="off"
-                required
-                onChange={handleChange}
-                value={inputs.quantity || ""}
-                className="min-w-0 flex-1 border-0 bg-transparent px-2 py-2.5 text-center text-sm font-semibold text-zinc-800 outline-none"
-              />
+          <Input
+            label="จำนวน"
+            name="quantity"
+            type="number"
+            autoComplete="off"
+            required
+            onChange={handleChange}
+            value={orders.quantity || ""}
+            placeholder="1"
+            leftIcon={<Hash size={16} />}
+            className="text-center"
+            rightContent={
               <div className="flex flex-col border-l border-zinc-200">
                 <button
                   type="button"
@@ -278,8 +239,9 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
                   aria-label="เพิ่มจำนวน"
                   className="flex flex-1 cursor-pointer items-center justify-center px-3 text-zinc-500 transition hover:bg-zinc-100"
                 >
-                  <ChevronUp size={13} />
+                  <ChevronUp size={16} />
                 </button>
+
                 <button
                   type="button"
                   disabled={isDisable}
@@ -287,11 +249,11 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
                   aria-label="ลดจำนวน"
                   className="flex flex-1 cursor-pointer items-center justify-center border-t border-zinc-200 px-3 text-zinc-500 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  <ChevronDown size={13} />
+                  <ChevronDown size={16} />
                 </button>
               </div>
-            </div>
-          </label>
+            }
+          />
         </div>
 
         {subtotal > 0 && (
@@ -300,7 +262,7 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
               ราคารวมรายการนี้
             </span>
             <span className="text-sm font-bold text-indigo-600">
-              ฿{subtotal.toLocaleString()}
+              {subtotal.toLocaleString()}
             </span>
           </div>
         )}
@@ -316,7 +278,7 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
             </p>
           </div>
           <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-600">
-            เลือกแล้ว {inputs.people.length} คน
+            เลือกแล้ว {orders.people.length} คน
           </span>
         </div>
 
@@ -347,7 +309,7 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
                 ))
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <p className="text-xs text-zinc-300">เลือกครบทุกคนแล้ว</p>
+                  <p className="text-xs text-zinc-300">ไม่มีรายชื่อให้เลือก</p>
                 </div>
               )}
             </div>
@@ -368,7 +330,7 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
             <button
               type="button"
               onClick={handleDeselectAll}
-              disabled={inputs.people.length === 0}
+              disabled={orders.people.length === 0}
               aria-label="ยกเลิกทั้งหมด"
               title="ยกเลิกทั้งหมด"
               className="flex size-8 cursor-pointer items-center justify-center rounded-xl bg-white text-zinc-600 shadow-2xs ring-1 ring-zinc-200 transition hover:bg-rose-50 hover:text-rose-600 active:scale-90 disabled:cursor-not-allowed disabled:opacity-30"
@@ -383,23 +345,19 @@ export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
               เลือกแล้ว
             </h3>
             <div className="flex h-44 flex-col gap-1.5 overflow-y-auto pr-1">
-              {inputs.people.length ? (
-                inputs.people.map((p: any) => (
+              {orders.people.length ? (
+                orders.people.map((person: any) => (
                   <button
-                    key={p.id}
+                    key={person.id}
                     type="button"
-                    onClick={() => handleTogglePerson(p)}
+                    onClick={() => handleTogglePerson(person)}
                     className="flex cursor-pointer items-center justify-between rounded-lg bg-indigo-100/70 px-2.5 py-1.5 text-left text-xs text-indigo-900 transition hover:bg-rose-100/80 hover:text-rose-700"
                   >
                     <div className="flex min-w-0 items-center gap-2">
-                      <span
-                        className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white shadow-2xs ${colorFromName(
-                          p.name,
-                        )}`}
-                      >
-                        {p.name.charAt(0).toUpperCase()}
+                      <UserAvatar name={person.name} />
+                      <span className="truncate font-medium">
+                        {person.name}
                       </span>
-                      <span className="truncate font-medium">{p.name}</span>
                     </div>
                     <Check
                       size={14}

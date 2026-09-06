@@ -1,5 +1,4 @@
 "use client";
-
 import { Calculator } from "lucide-react";
 
 export function SubmitButton({ formId }: { formId?: string }) {
