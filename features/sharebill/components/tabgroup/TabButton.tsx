@@ -1,23 +1,53 @@
-import { capitalize } from "@/utils/capitalize";
+"use client";
 
-type TabKey = "people" | "order" | "summary";
+import React from "react";
+import { Users, ReceiptText, PieChart } from "lucide-react";
+
+export type TabKey = "people" | "order" | "summary";
+
 type TabButtonProps = {
   value: TabKey;
   activeTab: TabKey;
   onClick: (value: TabKey) => void;
 };
 
+// ปรับแก้ข้อความภาษาไทยให้ครอบคลุมทุกค่าใช้จ่าย
+const tabConfig: Record<TabKey, { label: string; icon: React.ElementType }> = {
+  people: {
+    label: "รายชื่อผู้เข้าร่วม",
+    icon: Users,
+  },
+  order: {
+    label: "รายการค่าใช้จ่าย",
+    icon: ReceiptText,
+  },
+  summary: {
+    label: "สรุปยอด",
+    icon: PieChart,
+  },
+};
+
 export function TabButton({ value, activeTab, onClick }: TabButtonProps) {
+  const { label, icon: Icon } = tabConfig[value];
+  const isActive = activeTab === value;
+
   return (
     <button
+      type="button"
       onClick={() => onClick(value)}
-      className={`relative flex cursor-pointer items-center justify-center rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 ${
-        activeTab == value
-          ? "bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white shadow-sm"
-          : "text-zinc-500 hover:bg-zinc-200/60 hover:text-zinc-800"
+      className={`group flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 select-none ${
+        isActive
+          ? "bg-indigo-600 text-white shadow-xs"
+          : "text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900"
       }`}
     >
-      <span>{capitalize(value)}</span>
+      <Icon
+        size={15}
+        className={`transition-colors ${
+          isActive ? "text-white" : "text-zinc-400 group-hover:text-zinc-700"
+        }`}
+      />
+      <span>{label}</span>
     </button>
   );
 }

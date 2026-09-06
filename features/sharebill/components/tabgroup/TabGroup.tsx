@@ -1,7 +1,7 @@
 "use client";
-import { TabButton } from "./TabButton";
 
-type TabKey = "people" | "order" | "summary";
+import React from "react";
+import { TabButton, TabKey } from "./TabButton";
 
 type TabGroupProps = {
   tabs: TabKey[];
@@ -11,8 +11,8 @@ type TabGroupProps = {
 
 export function TabGroup({ tabs, activeTab, setActiveTab }: TabGroupProps) {
   return (
-    <nav className="sticky top-0 z-40 w-full bg-white/70 p-2 backdrop-blur-md transition-all select-none border-b border-zinc-100">
-      <div className="mx-auto flex w-fit gap-1 rounded-full bg-zinc-100/80 p-1 shadow-inner border border-zinc-200/50">
+    <nav className="sticky top-16 z-30 w-full border-b border-zinc-200/80 bg-white/80 p-2 backdrop-blur-md select-none">
+      <div className="mx-auto flex w-fit gap-1.5 rounded-2xl border border-zinc-200/80 bg-zinc-100/70 p-1.5 shadow-inner">
         {tabs.map((tab) => (
           <TabButton
             key={tab}

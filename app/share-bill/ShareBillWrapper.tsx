@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { PeopleProvider } from "@/features/sharebill/contexts/PeopleContext";
-import { OrderProvider } from "@/features/sharebill/contexts/OrderContext";
+import { PeopleProvider, OrderProvider } from "@/features/sharebill/contexts";
 import {
   PeopleTab,
   OrderTab,
