@@ -1,60 +1,54 @@
 "use client";
 import React, { useReducer } from "react";
-import { SubmitButton } from "./SubmitButton";
+import { Coins, Percent } from "lucide-react";
 import { MonthSelect } from "./MonthSelect";
 import { DatePicker } from "./DatePicker";
-import { Input } from "./Input";
-import { getDayDiff } from "@/utils/get_day_diff";
-import { useResultContext } from "@/features/interest/contexts/ResultContext";
-import { interestCalculator } from "@/utils/interest_calculator";
-import {
-  fixedInit,
-  fixedReducer,
-} from "@/features/interest/hooks/fixedReducer";
-
-//ฝากประจำ
-const getDay = (date: any, _month: any) => {
-  const month = Number(_month);
-  const currentMonth = new Date(date).getMonth();
-
-  const startDay = date.getTime();
-  const endDay = new Date(date).setMonth(currentMonth + month);
-
-  const dayDiff = getDayDiff(startDay, endDay);
-
-  return dayDiff;
-};
+import { Input } from "@/components/ui/Input";
+import { useResultContext } from "@/features/interest/contexts";
+import { interestCalculator, getDayCount } from "@/utils";
+import { fixedInit, fixedReducer } from "@/features/interest/hooks";
 
 export function FixedPlan() {
-  const { setResult } = useResultContext();
+  const { setPlanResult } = useResultContext();
   const [state, dispatch] = useReducer(fixedReducer, fixedInit);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { amount, rate, start, month } = state;
 
-    const days = getDay(new Date(start), month);
-    const res = interestCalculator(amount, rate, days);
-    const sum = amount + res;
+    if (!start || !month) {
+      alert("กรุณากรอกข้อมูลวันที่และระยะเวลาฝากให้ครบถ้วน");
+      return;
+    }
 
-    const result = {
-      amount: amount,
-      interest: res,
+    const days = getDayCount(start, month);
+    const res = interestCalculator(amount, rate, days);
+    const sum = Number(amount) + res;
+
+    setPlanResult("fixed", {
+      amount: amount || 0,
+      interest: rate || 0,
+      interestAmount: res,
       total: sum,
       day: days,
-    };
-
-    setResult(result);
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
+    <form
+      id="fixed-form"
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-3.5"
+    >
       <Input
-        label="Amount"
+        label="จำนวนเงินฝาก (บาท)"
         type="number"
         min={0}
+        step="any"
         required
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        placeholder="เช่น 100,000"
+        leftIcon={<Coins size={15} />}
+        onChange={(e) =>
           dispatch({
             type: "update",
             payload: { amount: Number(e.target.value) },
@@ -63,36 +57,42 @@ export function FixedPlan() {
       />
 
       <Input
-        label="Interest Rate (%)"
+        label="อัตราดอกเบี้ยต่อปี (%)"
         type="number"
         min={0}
+        step="any"
         required
+        placeholder="เช่น 2.0"
+        leftIcon={<Percent size={15} />}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           dispatch({
             type: "update",
-            payload: { rate: Number(e.target.value) },
+            payload: { rate: Number(e.target.value) || 0 },
           })
         }
       />
 
-      <DatePicker
-        label="Start Date"
-        selectedValue={(e: any) =>
-          dispatch({
-            type: "update",
-            payload: { start: new Date(e.target.value).getTime() },
-          })
-        }
-      />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <DatePicker
+          label="วันที่เริ่มฝาก"
+          selectedValue={(e: any) =>
+            dispatch({
+              type: "update",
+              payload: { start: new Date(e.target.value).getTime() },
+            })
+          }
+        />
 
-      <MonthSelect
-        label="Select Month"
-        selectedValue={(e: any) =>
-          dispatch({ type: "update", payload: { month: e.target.value } })
-        }
-      />
-
-      <SubmitButton />
+        <MonthSelect
+          label="ระยะเวลาฝาก"
+          selectedValue={(e: any) =>
+            dispatch({
+              type: "update",
+              payload: { month: Number(e.target.value) },
+            })
+          }
+        />
+      </div>
     </form>
   );
 }

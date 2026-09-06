@@ -1,22 +1,21 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Modal } from "../../../shared/Modal";
+import { ReceiptText } from "lucide-react";
+import { Modal } from "@/components";
 import { useOrder } from "@/features/sharebill/contexts";
-import { OrderForm } from "./order/OrderForm";
-import { OrderCard } from "./order/OrderCard";
-import { Receipt } from "lucide-react";
+import OrderForm from "./OrderForm";
+import OrderCard from "./OrderCard";
 
-export function TotalTab() {
+export default function OrderList() {
   const [mounted, setMounted] = useState(false);
-  const { order, setOrder } = useOrder();
   const [open, setOpen] = useState<boolean>(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const { order, setOrder } = useOrder();
 
   const handleEdit = (updated: any) => {
     const total =
       (Number(updated.price) || 0) * (Number(updated.quantity) || 0);
 
-    // ✅ เปลี่ยนจาก order.people เป็น updated.people
     const peopleList = Array.isArray(updated.people) ? updated.people : [];
     const price = peopleList.length > 0 ? total / peopleList.length : 0;
 
@@ -35,7 +34,7 @@ export function TotalTab() {
       return updatedOrders;
     });
 
-    handleClose(); // ปิด modal และเคลียร์ selectedOrder
+    handleClose();
   };
 
   const handleDelete = (id: string) => {
@@ -61,9 +60,8 @@ export function TotalTab() {
     setMounted(true);
   }, []);
 
-  // 💡 ถ้ายอดรวม/จำนวนรายการกำลังคำนวณอยู่ ให้ Render ว่างเปล่าฝั่ง SSR ไปก่อน
   if (!mounted) {
-    return null; // หรือจะ return สเกเลตันบางๆ แทนได้ครับ
+    return null;
   }
 
   return (
@@ -77,25 +75,29 @@ export function TotalTab() {
         />
       </Modal>
 
-      <section className="w-full">
-        <div className="mb-3 flex items-baseline justify-between">
-          <p className="text-sm font-semibold text-zinc-800">ออเดอร์ทั้งหมด</p>
+      <section className="w-full space-y-3">
+        {/* Header ส่วนสรุปรายการ */}
+        <div className="flex items-baseline justify-between px-1">
+          <p className="text-xs font-bold tracking-wider text-zinc-500 uppercase">
+            รายการค่าใช้จ่ายทั้งหมด
+          </p>
           {mounted && order?.length ? (
             <p className="text-xs text-zinc-500">
-              {order.length} รายการ · รวม{" "}
-              <span className="font-semibold text-violet-600">
-                ฿{grandTotal}
+              {order.length} รายการ · ยอดรวม{" "}
+              <span className="font-bold text-indigo-600">
+                {grandTotal.toLocaleString()}
               </span>
             </p>
           ) : null}
         </div>
 
-        <ul className="space-y-3">
+        {/* รายการ Card / Empty State */}
+        <ul className="space-y-2.5">
           {order?.length ? (
             order.map((o: any) => (
               <li
                 key={o.id}
-                className="rounded-xl border border-zinc-200 bg-white px-4 py-3 shadow-sm transition hover:shadow-md"
+                className="rounded-2xl border border-zinc-200/80 bg-white px-4 py-3.5 shadow-xs transition hover:border-indigo-200 hover:shadow-md"
               >
                 <OrderCard
                   o={o}
@@ -107,11 +109,15 @@ export function TotalTab() {
               </li>
             ))
           ) : (
-            <li className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-zinc-200 py-10 text-center">
-              <Receipt size={22} className="text-zinc-300" />
-              <p className="text-sm text-zinc-400">ยังไม่มีออเดอร์</p>
-              <p className="text-xs text-zinc-300">
-                กดปุ่มเพิ่มออเดอร์ด้านบนเพื่อเริ่มต้น
+            <li className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 py-12 text-center">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-400">
+                <ReceiptText size={20} />
+              </div>
+              <p className="text-xs font-bold text-zinc-600">
+                ยังไม่มีรายการค่าใช้จ่าย
+              </p>
+              <p className="text-[11px] text-zinc-400">
+                เพิ่มรายการค่าใช้จ่ายเพื่อเริ่มคำนวณสรุปยอดหาร
               </p>
             </li>
           )}

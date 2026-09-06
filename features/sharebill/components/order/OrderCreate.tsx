@@ -1,22 +1,24 @@
 "use client";
 import { useState } from "react";
-import { OrderForm } from "./OrderForm";
 import { useOrder } from "@/features/sharebill/contexts";
-import { Modal } from "@/shared";
+import { Modal } from "@/components";
 import { Plus } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import OrderForm from "./OrderForm";
 
-export function OrderCreate() {
+export default function OrderCreate() {
   const [open, setOpen] = useState<boolean>(false);
   const { setOrder } = useOrder();
 
   const handleSubmit = (order: any) => {
-    const total = order.price * order.quantity;
-    const price = order.people.length > 0 ? total / order.people.length : 0;
+    const total = (Number(order.price) || 0) * (Number(order.quantity) || 0);
+    const peopleList = Array.isArray(order.people) ? order.people : [];
+    const price = peopleList.length > 0 ? total / peopleList.length : 0;
 
     const newOrder = {
       ...order,
       id: uuidv4(),
+      people: peopleList,
       total: total,
       price_per_people: price,
     };
@@ -41,11 +43,12 @@ export function OrderCreate() {
       </Modal>
 
       <button
+        type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:shadow-md active:scale-95"
+        className="flex cursor-pointer items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-indigo-700 hover:shadow-md active:scale-95"
       >
         <Plus size={16} />
-        Add New Order
+        <span>เพิ่มรายการค่าใช้จ่าย</span>
       </button>
     </>
   );

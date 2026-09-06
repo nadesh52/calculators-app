@@ -1,21 +1,19 @@
 "use client";
 import { useState } from "react";
-import { PeopleProvider } from "@/features/sharebill/contexts/PeopleContext";
-import { OrderProvider } from "@/features/sharebill/contexts/OrderContext";
+import { PeopleProvider, OrderProvider } from "@/features/sharebill/contexts";
 import {
   PeopleTab,
   OrderTab,
   TabGroup,
   SummaryTab,
-} from "@/features/sharebill";
+} from "@/features/sharebill/components";
+import { TabKey } from "@/features/sharebill/types";
 
 const TABS = {
   people: <PeopleTab />,
   order: <OrderTab />,
   summary: <SummaryTab />,
 };
-
-type TabKey = keyof typeof TABS;
 
 export function ShareBillWrapper() {
   const [activeTab, setActiveTab] = useState<TabKey>("order");
