@@ -45,7 +45,7 @@ export function CompareWrapper() {
 
   return (
     <div className="min-h-screen bg-zinc-50 pt-6 pb-32">
-      <div className="min-h-screen bg-zinc-50 pt-6 pb-32">
+      <div>
         <div className="mx-auto max-w-xl px-4 sm:px-6">
           {/* Header Section + Reset Button */}
           <div className="mb-4 flex items-center justify-between">
@@ -78,7 +78,7 @@ export function CompareWrapper() {
       {showMenu && (
         <div
           onClick={() => setShowMenu(false)}
-          className="fixed inset-0 z-30 bg-zinc-900/30 backdrop-blur-xs transition-opacity duration-200"
+          className="fixed inset-0 z-30 bg-zinc-900/30  transition-opacity duration-200"
         />
       )}
 
@@ -87,7 +87,7 @@ export function CompareWrapper() {
       {showMenu && (
         <div
           onClick={() => setShowMenu(false)}
-          className="fixed inset-0 z-40 bg-zinc-900/30 transition-opacity duration-200"
+          className="fixed inset-0 z-40 bg-zinc-900/30 backdrop-blur-xs transition-opacity duration-200"
         >
           {/* Container จัดตำแหน่งฟอร์ม + ปุ่ม FAB ให้ลอยอยู่มุมขวาล่าง */}
           <div className="absolute right-4 bottom-5 flex flex-col items-end gap-3 sm:right-6 sm:bottom-6">
