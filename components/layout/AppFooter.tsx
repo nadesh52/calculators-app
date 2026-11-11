@@ -1,15 +1,8 @@
 "use client";
-import Link from "next/link";
-import { Calculator, Scale, Percent, Receipt } from "lucide-react";
+import { Calculator, AdIcon } from "lucide-react";
 
 export function AppFooter() {
   const currentYear = new Date().getFullYear();
-
-  const quickLinks = [
-    { name: "Compare Price", href: "/compare-price", icon: Scale },
-    { name: "Interest Calculator", href: "/interest-calc", icon: Percent },
-    { name: "Share Bill", href: "/share-bill", icon: Receipt },
-  ];
 
   return (
     <footer className="w-full border-t border-zinc-200/80 bg-white py-6 text-zinc-500">
@@ -29,19 +22,10 @@ export function AppFooter() {
 
         {/* Navigation Quick Links */}
         <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-medium">
-          {quickLinks.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-1.5 text-zinc-500 transition hover:text-indigo-600"
-              >
-                <Icon size={13} />
-                <span>{item.name}</span>
-              </Link>
-            );
-          })}
+          <span className="flex items-center gap-1.5 text-zinc-500 transition hover:text-indigo-600">
+            <AdIcon size={13} />
+            <span>Ad</span>
+          </span>
         </div>
       </div>
     </footer>

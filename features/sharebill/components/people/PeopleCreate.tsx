@@ -26,7 +26,7 @@ export default function PeopleCreate({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value.trimStart())}
-            placeholder="ป้อนชื่อ (เช่น สมชาย, โบว์)..."
+            placeholder="ป้อนชื่อ (สมชาย, โบว์)..."
             leftIcon={<User size={16} />}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isDisable) {

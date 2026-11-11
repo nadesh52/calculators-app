@@ -1,14 +1,19 @@
 "use client";
 import { Package, Plus, ShoppingBag } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { initItem } from "../constants";
 import { Input } from "@/components/ui";
+import { initItem } from "../constants";
+import { getNextItemNumber } from "../utils";
 
-export function Form({ formData }: { formData: (item: any) => void }) {
+interface FormProps {
+  formData: (item: any) => void;
+  existingItems: any[];
+}
+
+export function Form({ formData, existingItems }: FormProps) {
   const [mode, setMode] = useState<"single" | "pack">("single");
   const [items, setItems] = useState<any>(initItem);
-  const [itemCount, setItemCount] = useState(0);
 
   const handleModeChange = (newMode: "single" | "pack") => {
     setMode(newMode);
@@ -23,7 +28,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
     setItems((values: any) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
     // count = จำนวนชิ้น (ถ้าชิ้นเดี่ยวคำนวณเป็น 1 ชิ้น)
@@ -38,7 +43,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
 
     // ปริมาณที่ได้ต่อ 1 บาท (ยิ่งเยอะยิ่งคุ้ม)
     const average = Number((totalQuantity / price).toFixed(2));
-    const nextNumber = itemCount + 1;
+    const nextNumber = getNextItemNumber(existingItems);
 
     const newItem = {
       id: uuidv4(),
@@ -51,46 +56,14 @@ export function Form({ formData }: { formData: (item: any) => void }) {
 
     formData(newItem);
     setItems(mode === "single" ? { ...initItem, count: "1" } : initItem);
-    setItemCount(nextNumber);
   };
 
-  useEffect(() => {
-    function handleReset() {
-      setItemCount(0);
-    }
-    window.addEventListener("itemsReset", handleReset);
-    return () => window.removeEventListener("itemsReset", handleReset);
-  }, []);
-
-  // ดึงค่า itemCount หลัง Mount ฝั่ง Client เท่านั้น
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("items");
-      const items = stored ? JSON.parse(stored) : [];
-      if (Array.isArray(items) && items.length > 0) {
-        const maxNumber = items.reduce(
-          (max: number, item: any) => (item.number > max ? item.number : max),
-          0,
-        );
-        setItemCount(maxNumber);
-      }
-    } catch (e) {
-      console.error("Failed to load itemCount from localStorage:", e);
-    }
-  }, []);
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-xl sm:p-5"
-    >
+    <form onSubmit={handleSubmit}>
       {/* Header & Item Badge */}
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-sm font-bold text-zinc-800">
-          เพิ่มรายการเปรียบเทียบ
-        </p>
         <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-[11px] font-semibold text-indigo-600">
-          รายการ #{itemCount + 1}
+          รายการ #{getNextItemNumber(existingItems)}
         </span>
       </div>
 
@@ -137,7 +110,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
             value={items.count}
             onChange={handleChange}
             required
-            placeholder="เช่น 6"
+            placeholder="6"
             min="1"
           />
         )}
@@ -149,7 +122,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
           value={items.quantity}
           onChange={handleChange}
           required
-          placeholder="เช่น 250"
+          placeholder="250"
           min="0.01"
           step="any"
         />
@@ -161,7 +134,7 @@ export function Form({ formData }: { formData: (item: any) => void }) {
           value={items.price}
           onChange={handleChange}
           required
-          placeholder="เช่น 120"
+          placeholder="120"
           min="0.01"
           step="any"
         />

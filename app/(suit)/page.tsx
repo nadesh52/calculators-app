@@ -1,4 +1,4 @@
-import MainWrapper from "@/app/MainWrapper";
+import MainWrapper from "./MainWrapper";
 
 export default function Home() {
   return <MainWrapper />;

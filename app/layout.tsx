@@ -1,4 +1,4 @@
-import '@/styles/globals.css'
+import "@/styles/globals.css";
 
 export const metadata = {
   title: "Calculators",
@@ -12,7 +12,7 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className='bg-background'>{children}</body>
+      <body className="bg-zinc-50">{children}</body>
     </html>
   );
 }

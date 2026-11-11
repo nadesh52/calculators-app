@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
-  output: isProd ? "export" : "standalone",
+  output: "export",
+  basePath: isProd ? "/calculators-app" : "",
+
   trailingSlash: true,
+
   images: {
     unoptimized: true,
     remotePatterns: [

@@ -1,73 +1,29 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  Scale,
-  Percent,
-  Receipt,
-  ChevronDown,
-  ArrowLeft,
-  MessageSquare,
-} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { ChevronDown, ArrowLeft } from "lucide-react";
+import { appList } from "@/constants";
 
-export type AppOption = {
-  id: string;
-  title: string;
-  route: string;
-  icon: React.ElementType;
-  iconColor: string;
-  description?: string;
-};
-
-// รายการแอปพร้อมไอคอนสี
-export const appList: AppOption[] = [
-  {
-    id: "comparison",
-    title: "Compare Price",
-    route: "/compare-price",
-    icon: Scale,
-    iconColor: "text-indigo-600",
-    description: "เปรียบเทียบราคาและความคุ้มค่า",
-  },
-  {
-    id: "interest",
-    title: "Interest Calc",
-    route: "/interest-calc",
-    icon: Percent,
-    iconColor: "text-emerald-500",
-    description: "คำนวณดอกเบี้ยเงินฝากสุทธิ",
-  },
-  {
-    id: "sharebill",
-    title: "Share Bill",
-    route: "/share-bill",
-    icon: Receipt,
-    iconColor: "text-amber-500",
-    description: "หารค่าใช้จ่ายกลุ่ม ทริป สินค้า บริการ",
-  },
-];
-
-interface AppHeaderProps {
-  activeAppId?: string;
-  onSelectApp?: (appId: string | null) => void;
-}
-
-export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
+export function AppHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isMainRoute = pathname === "/";
-  // แสดงปุ่ม Back เมื่อ ไม่ใช่หน้า / หรือ กำลังใช้งานแอปย่อยในหน้า Main
-  const showBackButton = !isMainRoute || Boolean(activeAppId);
+  const showBackButton = pathname !== "/";
 
-  // ค้นหาแอปปัจจุบันจาก Path หรือ Active ID
   const currentApp =
-    appList.find((a) => a.id === activeAppId || a.route === pathname) ||
-    appList[0];
+    appList.find(
+      (app) => pathname === app.route || pathname.startsWith(`${app.route}/`),
+    ) || appList[0];
 
   const CurrentIcon = currentApp.icon;
+
+  const handleBackToMain = () => {
+    router.push("/");
+  };
 
   // ปิด Dropdown เมื่อคลิกข้างนอก
   useEffect(() => {
@@ -83,12 +39,9 @@ export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ฟังก์ชันสำหรับกดปุ่ม Back กลับไปยัง Dashboard
-  const handleBackToMain = () => {
-    if (onSelectApp) {
-      onSelectApp(null); // เคลียร์ activeAppId ในหน้า Main เพื่อกลับหน้า Dashboard
-    }
-  };
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-zinc-200/80 bg-white/80 px-4 backdrop-blur-md sm:px-6">
@@ -128,9 +81,7 @@ export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
             <CurrentIcon size={20} className={currentApp.iconColor} />
             <div className="text-left">
               <span className="block text-xs font-bold text-zinc-800 sm:text-sm">
-                {isMainRoute && !activeAppId
-                  ? "Calculators Suite"
-                  : currentApp.title}
+                {isMainRoute ? "Calculators Suite" : currentApp.title}
               </span>
             </div>
             <ChevronDown
@@ -153,21 +104,12 @@ export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
               <div className="space-y-1 pt-1">
                 {appList.map((app) => {
                   const Icon = app.icon;
-                  const isSelected =
-                    activeAppId === app.id || pathname === app.route;
+                  const isSelected = currentApp.id === app.id;
 
                   return (
-                    <button
+                    <Link
                       key={app.id}
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                        if (onSelectApp) {
-                          onSelectApp(app.id);
-                        } else {
-                          window.location.href = app.route;
-                        }
-                      }}
+                      href={app.route}
                       className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
                         isSelected
                           ? "bg-indigo-50/60 font-semibold"
@@ -183,7 +125,7 @@ export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
                           {app.description}
                         </p>
                       </div>
-                    </button>
+                    </Link>
                   );
                 })}
               </div>
@@ -193,7 +135,7 @@ export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
       </div>
 
       {/* ด้านขวา: ปุ่ม Mock สำหรับใช้งานผ่าน LINE Bot */}
-      <div className="flex items-center gap-2">
+      {/* <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => alert("ระบบ LINE Bot กำลังเปิดให้บริการเร็วๆ นี้!")}
@@ -203,7 +145,7 @@ export function AppHeader({ activeAppId, onSelectApp }: AppHeaderProps) {
           <span className="hidden sm:inline">ใช้งานผ่าน LINE Bot</span>
           <span className="sm:hidden">LINE Bot</span>
         </button>
-      </div>
+      </div> */}
     </header>
   );
 }

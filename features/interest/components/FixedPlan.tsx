@@ -5,7 +5,7 @@ import { MonthSelect } from "./MonthSelect";
 import { DatePicker } from "./DatePicker";
 import { Input } from "@/components/ui/Input";
 import { useResultContext } from "@/features/interest/contexts";
-import { interestCalculator, getDayCount } from "@/utils";
+import { interestCalculator, getDayCount } from "../utils";
 import { fixedInit, fixedReducer } from "@/features/interest/hooks";
 
 export function FixedPlan() {
@@ -46,7 +46,7 @@ export function FixedPlan() {
         min={0}
         step="any"
         required
-        placeholder="เช่น 100,000"
+        placeholder="100,000"
         leftIcon={<Coins size={15} />}
         onChange={(e) =>
           dispatch({
@@ -62,7 +62,7 @@ export function FixedPlan() {
         min={0}
         step="any"
         required
-        placeholder="เช่น 2.0"
+        placeholder="2.0"
         leftIcon={<Percent size={15} />}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           dispatch({

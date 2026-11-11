@@ -4,7 +4,7 @@ import { Coins, Percent } from "lucide-react";
 import { DatePicker } from "./DatePicker";
 import { Input } from "@/components/ui/Input";
 import { useResultContext } from "@/features/interest/contexts";
-import { interestCalculator, getDayCount } from "@/utils";
+import { interestCalculator, getDayCount } from "../utils";
 import { savingInit, savingReducer } from "@/features/interest/hooks";
 
 export function SavingPlan() {
@@ -55,7 +55,7 @@ export function SavingPlan() {
         min={0}
         step="any"
         required
-        placeholder="เช่น 100,000"
+        placeholder="100,000"
         leftIcon={<Coins size={15} />}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           dispatch({
@@ -71,7 +71,7 @@ export function SavingPlan() {
         min={0}
         step="any"
         required
-        placeholder="เช่น 1.5"
+        placeholder="1.5"
         leftIcon={<Percent size={15} />}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           dispatch({
