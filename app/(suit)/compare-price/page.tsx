@@ -1,5 +1,5 @@
-import { CompareWrapper } from "@/features/comparison/components";
+import { CompareFeature } from "@/features/comparison";
 
 export default function ComparePricePage() {
-  return <CompareWrapper />;
+  return <CompareFeature />;
 }

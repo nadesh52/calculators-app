@@ -15,7 +15,7 @@ const TABS = {
   summary: <SummaryTab />,
 };
 
-export function ShareBillWrapper() {
+export function ShareBillFeature() {
   const [activeTab, setActiveTab] = useState<TabKey>("order");
 
   return (

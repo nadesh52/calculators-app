@@ -1,1 +1,1 @@
-export * from './components'
+export { ShareBillFeature } from "./ShareBillFeature";

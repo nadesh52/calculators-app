@@ -18,7 +18,7 @@ const getStoredItems = () => {
   }
 };
 
-export function CompareWrapper() {
+export function CompareFeature() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<any[]>([]);
   const [hydrated, setHydrated] = useState(false);

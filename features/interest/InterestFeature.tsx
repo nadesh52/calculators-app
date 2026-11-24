@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Calculator } from "lucide-react";
 import { ResultProvider } from "@/features/interest/contexts/ResultContext";
 import { ResultBox, SubmitButton } from "@/features/interest/components";
-import { FixedPlanTab } from "./fixed-plan";
-import { SavingPlanTab } from "./saving-plan";
-import { PlanTabs } from "./PlanTabs";
+import { FixedPlanTab } from "./components/fixed-plan";
+import { SavingPlanTab } from "./components/saving-plan";
+import { PlanTabs } from "./components/PlanTabs";
 
-export function InterestWrapper() {
+export function InterestFeature() {
   const [activeTab, setActiveTab] = useState<"saving" | "fixed">("saving");
   const activeFormId = activeTab === "saving" ? "saving-form" : "fixed-form";
 

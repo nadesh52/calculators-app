@@ -1,5 +1,5 @@
-import { ShareBillWrapper } from "./ShareBillWrapper";
+import { ShareBillFeature } from "@/features/sharebill";
 
 export default function ShareBillPage() {
-  return <ShareBillWrapper />;
+  return <ShareBillFeature />;
 }

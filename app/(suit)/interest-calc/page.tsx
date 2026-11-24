@@ -1,5 +1,5 @@
-import { InterestWrapper } from "@/features/interest/components";
+import { InterestFeature } from "@/features/interest";
 
 export default function page() {
-  return <InterestWrapper />;
+  return <InterestFeature />;
 }

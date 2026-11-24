@@ -1,5 +1,4 @@
-import React from "react";
-import { colorFromName } from "@/utils";
+import { colorFromName } from "../utils";
 
 type Props = {
   name: string;
