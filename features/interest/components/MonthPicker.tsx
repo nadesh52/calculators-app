@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import { CalendarDays, ChevronDown } from "lucide-react";
+import { monthOptions } from "../constants";
 
-export interface MonthSelectProps {
+export interface MonthPickerProps {
   label?: string;
   selectedValue: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
@@ -10,15 +11,13 @@ export interface MonthSelectProps {
   defaultValue?: any;
 }
 
-export function MonthSelect({
+export function MonthPicker({
   label,
   selectedValue,
   className = "",
   value,
   defaultValue,
-}: MonthSelectProps) {
-  const monthOptions = [3, 6, 12, 24, 36];
-
+}: MonthPickerProps) {
   // ตรวจสอบว่ายังไม่ได้เลือกค่าหรือไม่ เพื่อปรับสีข้อความ Placeholder ให้จางเหมือน Input อื่นๆ
   const isPlaceholder =
     !value && (defaultValue === "" || defaultValue === undefined);

@@ -1,42 +1,51 @@
 "use client";
 import React, { useReducer } from "react";
 import { Coins, Percent } from "lucide-react";
-import { MonthSelect } from "./MonthSelect";
-import { DatePicker } from "./DatePicker";
-import { Input } from "@/components/ui/Input";
+import { DatePicker } from "../DatePicker";
+import { Input } from "@/components/ui";
 import { useResultContext } from "@/features/interest/contexts";
-import { interestCalculator, getDayCount } from "../utils";
-import { fixedInit, fixedReducer } from "@/features/interest/hooks";
+import { interestCalculator, getDayCount } from "../../utils";
+import { savingInit, savingReducer } from "@/features/interest/hooks";
 
-export function FixedPlan() {
+export function SavingPlanTab() {
   const { setPlanResult } = useResultContext();
-  const [state, dispatch] = useReducer(fixedReducer, fixedInit);
+  const [state, dispatch] = useReducer(savingReducer, savingInit);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const startDateString = state.start
+    ? new Date(state.start).toISOString().split("T")[0]
+    : "";
+
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-    const { amount, rate, start, month } = state;
 
-    if (!start || !month) {
-      alert("กรุณากรอกข้อมูลวันที่และระยะเวลาฝากให้ครบถ้วน");
+    const { amount, rate, start, end } = state;
+
+    if (!start || !end) {
+      alert("กรุณาระบุวันที่เริ่มฝากและวันที่สิ้นสุดให้ครบถ้วน");
       return;
     }
 
-    const days = getDayCount(start, month);
-    const res = interestCalculator(amount, rate, days);
-    const sum = Number(amount) + res;
+    if (start > end) {
+      alert("วันที่สิ้นสุดต้องไม่เกิดขึ้นก่อนวันที่เริ่มฝาก");
+      return;
+    }
 
-    setPlanResult("fixed", {
+    const dayDiff = getDayCount(start, end);
+    const interest = interestCalculator(amount, rate, dayDiff);
+    const sum = Number(amount) + interest;
+
+    setPlanResult("saving", {
       amount: amount || 0,
       interest: rate || 0,
-      interestAmount: res,
+      interestAmount: interest,
       total: sum,
-      day: days,
+      day: dayDiff,
     });
   };
 
   return (
     <form
-      id="fixed-form"
+      id="saving-form"
       onSubmit={handleSubmit}
       className="flex flex-col gap-3.5"
     >
@@ -48,10 +57,10 @@ export function FixedPlan() {
         required
         placeholder="100,000"
         leftIcon={<Coins size={15} />}
-        onChange={(e) =>
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           dispatch({
             type: "update",
-            payload: { amount: Number(e.target.value) },
+            payload: { amount: Number(e.target.value) || 0 },
           })
         }
       />
@@ -62,7 +71,7 @@ export function FixedPlan() {
         min={0}
         step="any"
         required
-        placeholder="2.0"
+        placeholder="1.5"
         leftIcon={<Percent size={15} />}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           dispatch({
@@ -82,13 +91,13 @@ export function FixedPlan() {
             })
           }
         />
-
-        <MonthSelect
-          label="ระยะเวลาฝาก"
+        <DatePicker
+          label="วันที่สิ้นสุด"
+          min={startDateString}
           selectedValue={(e: any) =>
             dispatch({
               type: "update",
-              payload: { month: Number(e.target.value) },
+              payload: { end: new Date(e.target.value).getTime() },
             })
           }
         />

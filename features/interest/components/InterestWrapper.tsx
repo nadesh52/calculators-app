@@ -1,17 +1,14 @@
 "use client";
 import { useState } from "react";
-import { PiggyBank, Landmark, Calculator } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { ResultProvider } from "@/features/interest/contexts/ResultContext";
-import {
-  SavingPlan,
-  FixedPlan,
-  ResultBox,
-  SubmitButton,
-} from "@/features/interest/components";
+import { ResultBox, SubmitButton } from "@/features/interest/components";
+import { FixedPlanTab } from "./fixed-plan";
+import { SavingPlanTab } from "./saving-plan";
+import { PlanTabs } from "./PlanTabs";
 
 export function InterestWrapper() {
   const [activeTab, setActiveTab] = useState<"saving" | "fixed">("saving");
-
   const activeFormId = activeTab === "saving" ? "saving-form" : "fixed-form";
 
   return (
@@ -33,37 +30,12 @@ export function InterestWrapper() {
           </div>
 
           {/* Mode Switcher Tabs */}
-          <div className="mb-4 grid grid-cols-2 gap-1 rounded-xl bg-zinc-100 p-1">
-            <button
-              type="button"
-              onClick={() => setActiveTab("saving")}
-              className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition-all ${
-                activeTab === "saving"
-                  ? "bg-white text-indigo-600 shadow-xs"
-                  : "text-zinc-500 hover:text-zinc-800"
-              }`}
-            >
-              <PiggyBank size={15} />
-              Saving Plan
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("fixed")}
-              className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition-all ${
-                activeTab === "fixed"
-                  ? "bg-white text-indigo-600 shadow-xs"
-                  : "text-zinc-500 hover:text-zinc-800"
-              }`}
-            >
-              <Landmark size={15} />
-              Fixed Plan
-            </button>
-          </div>
+          <PlanTabs activeTab={activeTab} onChange={setActiveTab} />
 
           {/* Tab Content */}
-          <div className="pt-1">
-            {activeTab === "saving" && <SavingPlan />}
-            {activeTab === "fixed" && <FixedPlan />}
+          <div>
+            {activeTab === "saving" && <SavingPlanTab />}
+            {activeTab === "fixed" && <FixedPlanTab />}
           </div>
 
           {/* Single Shared Submit Button */}
@@ -73,9 +45,9 @@ export function InterestWrapper() {
         </div>
 
         {/* Result Box Card */}
-        <div className="w-full">
-          <ResultBox activeTab={activeTab} />
-        </div>
+        {/* <div className="w-full">
+        </div> */}
+        <ResultBox activeTab={activeTab} />
       </div>
     </ResultProvider>
   );

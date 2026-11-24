@@ -1,7 +1,5 @@
-export function getDayCount(dateTimestamp: number, monthDuration: number) {
-  const endDate = new Date(dateTimestamp);
+export function getDayCount(start: number, end: number) {
+  const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-  endDate.setMonth(endDate.getMonth() + monthDuration);
-
-  return (endDate.getTime() - dateTimestamp) / (1000 * 60 * 60 * 24);
+  return Math.ceil((end - start) / DAY_IN_MS);
 }
