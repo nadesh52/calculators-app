@@ -1,13 +1,10 @@
 "use client";
-import { UserAvatar } from "@/components";
 
-export interface UnpaidPerson {
-  id: string;
-  name: string;
-}
+import { People } from "../../types";
+import { UserAvatar } from "../UserAvatar";
 
 export interface UnpaidListProps {
-  unpaidPeople: UnpaidPerson[];
+  unpaidPeople: People[];
   onSelectPerson: (personId: string) => void;
 }
 
@@ -21,14 +18,14 @@ export default function UnpaidList({
     <div className="mt-3 flex flex-col gap-2 overflow-x-auto">
       <span className="shrink-0 text-xs text-zinc-400">คนที่ค้างจ่าย</span>
       <div className="flex flex-wrap gap-2">
-        {unpaidPeople.map((p) => (
+        {unpaidPeople.map((person: People) => (
           <button
-            key={p.id}
+            key={person.id}
             type="button"
-            title={`ดูเฉพาะ ${p.name}`}
-            onClick={() => onSelectPerson(p.id)}
+            title={`ดูเฉพาะ ${person.name}`}
+            onClick={() => onSelectPerson(person.id.toString())}
           >
-            <UserAvatar name={p.name} />
+            <UserAvatar name={person.name} />
           </button>
         ))}
       </div>

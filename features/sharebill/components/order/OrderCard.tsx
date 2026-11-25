@@ -1,7 +1,7 @@
 "use client";
 import { Receipt, EllipsisVertical } from "lucide-react";
 import { formatNumber } from "@/utils";
-import { UserAvatar } from "@/components";
+import { UserAvatar } from "../UserAvatar";
 
 const MAX_AVATARS = 4;
 

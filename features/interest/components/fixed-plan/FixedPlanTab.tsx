@@ -5,7 +5,11 @@ import { MonthPicker, DatePicker } from "../";
 import { Input } from "@/components/ui/Input";
 import { useResultContext } from "@/features/interest/contexts";
 import { fixedInit, fixedReducer } from "@/features/interest/hooks";
-import { getDayCount, interestCalculator } from "../../utils";
+import {
+  addMonthsToTimestamp,
+  getDayCount,
+  interestCalculator,
+} from "../../utils";
 
 export function FixedPlanTab() {
   const { setPlanResult } = useResultContext();
@@ -20,14 +24,16 @@ export function FixedPlanTab() {
       return;
     }
 
-    const days = getDayCount(start, month);
-    const res = interestCalculator(amount, rate, days);
-    const sum = Number(amount) + res;
+    const maturityDate = addMonthsToTimestamp(start, month);
+    const days = getDayCount(start, maturityDate);
+    const interest = interestCalculator(amount, rate, days);
+
+    const sum = Number(amount) + interest;
 
     setPlanResult("fixed", {
       amount: amount || 0,
       interest: rate || 0,
-      interestAmount: res,
+      interestAmount: interest,
       total: sum,
       day: days,
     });

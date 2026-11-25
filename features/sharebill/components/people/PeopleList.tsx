@@ -1,5 +1,5 @@
-import { UserAvatar } from "@/components";
 import { Trash2, UserCheck, Users } from "lucide-react";
+import { UserAvatar } from "../UserAvatar";
 
 type PeopleListProps = {
   people: any[];

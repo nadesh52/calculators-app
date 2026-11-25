@@ -1,18 +1,13 @@
 "use client";
 import { X, User } from "lucide-react";
-import { FilterOption } from "../../types";
+import { FilterOption, People } from "../../types";
 import { DEFAULT_FILTERS } from "../../constants";
-
-export interface SelectedPerson {
-  id: string;
-  name: string;
-}
 
 export interface FilterButtonsProps<T extends string = string> {
   filterMode: T;
   onFilterChange: (mode: T) => void;
   filters?: FilterOption<T>[];
-  selectedPerson?: SelectedPerson | null;
+  selectedPerson?: People | null;
   onClearSelectedPerson?: () => void;
 }
 

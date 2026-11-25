@@ -1,23 +1,10 @@
-import { UserAvatar } from "@/components";
 import { formatNumber } from "@/utils";
 import { CheckCircle2, Circle, Receipt, UtensilsCrossed } from "lucide-react";
-
-export interface OrderItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price_per_people: number;
-}
-
-export interface PersonSummary {
-  id: string;
-  name: string;
-  total: number;
-  orders: OrderItem[];
-}
+import { UserAvatar } from "../UserAvatar";
+import { People } from "../../types";
 
 export interface SummaryCardProps {
-  displayedPeople: PersonSummary[];
+  displayedPeople: People[];
   paidPeople: string[]; // เก็บ id ของคนที่จ่ายแล้ว
   handleTogglePaid: (personId: string) => void;
   colorFromName?: (name: string) => string;
@@ -45,7 +32,7 @@ export default function SummaryCard({
   return (
     <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
       {displayedPeople.map((person) => {
-        const isPaid = paidPeople.includes(person.id);
+        const isPaid = paidPeople.includes(person.id.toString());
 
         return (
           <div
@@ -69,7 +56,7 @@ export default function SummaryCard({
                 {/* ปุ่มสลับสถานะการชำระเงิน */}
                 <button
                   type="button"
-                  onClick={() => handleTogglePaid(person.id)}
+                  onClick={() => handleTogglePaid(person.id.toString())}
                   className={`flex shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition active:scale-95 ${
                     isPaid
                       ? "bg-emerald-100/80 text-emerald-700 hover:bg-emerald-200/80"
@@ -95,8 +82,8 @@ export default function SummaryCard({
 
               {/* รายการอาหาร/ค่าใช้จ่าย */}
               <div className="mt-3 space-y-1.5 border-t border-dashed border-zinc-100 pt-2.5">
-                {person.orders && person.orders.length > 0 ? (
-                  person.orders.map((o) => (
+                {person.order && person.order.length > 0 ? (
+                  person.order.map((o) => (
                     <div
                       key={o.id}
                       className="flex items-center justify-between gap-2 text-xs"

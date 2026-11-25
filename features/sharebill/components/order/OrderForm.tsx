@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePeople } from "@/features/sharebill/contexts";
-import { UserAvatar } from "@/components";
 import {
   Tag,
   Banknote,
@@ -17,6 +16,7 @@ import {
 } from "lucide-react";
 import { initOrder, QUICKBAR_MENU } from "../../constants";
 import { Input } from "@/components/ui";
+import { UserAvatar } from "../UserAvatar";
 
 export default function OrderForm({ onClose, onSubmit, order, onDelete }: any) {
   const { people } = usePeople();
